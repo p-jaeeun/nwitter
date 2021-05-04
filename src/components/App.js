@@ -18,7 +18,7 @@ function App() {
     });
   }, []);
   return (
-    <div>
+    <>
       {init ? (
         <AppRouter isLoggedIn={isLoggedIn} userObj={userObj} />
       ) : (
@@ -26,7 +26,7 @@ function App() {
       )}
 
       <footer>&copy;{new Date().getFullYear()}Nwitter</footer>
-    </div>
+    </>
   );
 }
 

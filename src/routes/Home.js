@@ -5,6 +5,7 @@ import Nweet from "components/Nweet";
 const Home = ({ userObj }) => {
   const [nweet, setNweet] = useState("");
   const [nweets, setNweets] = useState([]);
+  const [attachment, setAttachment] = useState();
 
   useEffect(() => {
     dbService
@@ -29,20 +30,40 @@ const Home = ({ userObj }) => {
     setNweet("");
   };
 
-  const onChange = (e) => {
+  const onInputChange = (e) => {
     setNweet(e.target.value);
   };
+
+  const onFileChange = (e) => {
+    const { files } = e.target;
+    const file = files[0];
+    const reader = new FileReader();
+    reader.onloadend = (finishedEvent) => {
+      const { result } = finishedEvent.currentTarget;
+      setAttachment(result);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const onClearAttachment = () => setAttachment(null);
   return (
-    <div>
+    <>
       <form onSubmit={createNweet}>
         <input
           type="text"
           value={nweet}
           placeholder="What's in your mind?"
           maxLength={120}
-          onChange={onChange}
+          onChange={onInputChange}
         />
+        <input type="file" accept="iamge/*" onChange={onFileChange} />
         <input type="submit" value="Ntweet" />
+        {attachment && (
+          <div>
+            <img src={attachment} alt="previewImg" width="50px" height="50px" />
+            <button onClcik={onClearAttachment}>Cancel upload</button>
+          </div>
+        )}
       </form>
       <div>
         {nweets.map((nweet) => (
@@ -53,7 +74,7 @@ const Home = ({ userObj }) => {
           />
         ))}
       </div>
-    </div>
+    </>
   );
 };
 

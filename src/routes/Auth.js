@@ -51,7 +51,7 @@ const Auth = () => {
     await authService.signInWithPopup(provider);
   };
   return (
-    <div>
+    <>
       <form onSubmit={onHandleSubmit}>
         <input
           name="email"
@@ -83,7 +83,7 @@ const Auth = () => {
           Continue with Github
         </button>
       </div>
-    </div>
+    </>
   );
 };
 
