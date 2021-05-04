@@ -1,11 +1,12 @@
-import { dbService } from "fBase";
+import { dbService, storageService } from "fBase";
+import { v4 as uuidv4 } from "uuid";
 import React, { useEffect, useState } from "react";
 import Nweet from "components/Nweet";
 
 const Home = ({ userObj }) => {
   const [nweet, setNweet] = useState("");
   const [nweets, setNweets] = useState([]);
-  const [attachment, setAttachment] = useState();
+  const [attachment, setAttachment] = useState("");
 
   useEffect(() => {
     dbService
@@ -22,12 +23,24 @@ const Home = ({ userObj }) => {
 
   const createNweet = async (e) => {
     e.preventDefault();
-    await dbService.collection("nweets").add({
+    let attachmentUrl = "";
+    // 이미지와 함께 트윗을 할 경우, 이미지 url를 받아서 트윗작성 후 함께 저장
+    if (attachment !== "") {
+      const attachmentRef = storageService
+        .ref()
+        .child(`${userObj.uid}/${uuidv4()}`);
+      const response = await attachmentRef.putString(attachment, "data_url");
+      attachmentUrl = await response.ref.getDownloadURL();
+    }
+    const nweetObj = {
       text: nweet,
       createdAt: Date.now(),
       creatorId: userObj.uid,
-    });
+      attachmentUrl,
+    };
+    await dbService.collection("nweets").add(nweetObj);
     setNweet("");
+    setAttachment("");
   };
 
   const onInputChange = (e) => {
@@ -61,7 +74,7 @@ const Home = ({ userObj }) => {
         {attachment && (
           <div>
             <img src={attachment} alt="previewImg" width="50px" height="50px" />
-            <button onClcik={onClearAttachment}>Cancel upload</button>
+            <button onClick={onClearAttachment}>Cancel upload</button>
           </div>
         )}
       </form>
