@@ -9,7 +9,11 @@ const Navigation = ({ userObj }) => {
           <Link to="/">HOME</Link>
         </li>
         <li>
-          <Link to="/profile">{userObj.displayName} Profile</Link>
+          <Link to="/profile">
+            {userObj?.displayName?.length
+              ? `${userObj.displayName}'s Profile`
+              : "Profile"}
+          </Link>
         </li>
       </ul>
     </nav>
