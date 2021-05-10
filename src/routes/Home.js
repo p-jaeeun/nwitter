@@ -1,16 +1,24 @@
-import { dbService } from "fBase";
+import { dbService } from 'fBase';
 
-import React, { useEffect, useState } from "react";
-import Nweet from "components/Nweet";
-import NweetFactory from "components/NweetFactory";
+import React, { useEffect, useState } from 'react';
+import Nweet from 'components/Nweet';
+import NweetFactory from 'components/NweetFactory';
+import styled from 'styled-components';
 
+const HomeContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+
+  align-items: center;
+`;
 const Home = ({ userObj }) => {
   const [nweets, setNweets] = useState([]);
 
   useEffect(() => {
     dbService
-      .collection("nweets")
-      .orderBy("createdAt", "desc")
+      .collection('nweets')
+      .orderBy('createdAt', 'desc')
       .onSnapshot((snapshot) => {
         const nweetArray = snapshot.docs.map((doc) => ({
           id: doc.id,
@@ -21,7 +29,7 @@ const Home = ({ userObj }) => {
   }, []);
 
   return (
-    <div>
+    <HomeContainer>
       <NweetFactory userObj={userObj} />
       <div>
         {nweets.map((nweet) => (
@@ -32,7 +40,7 @@ const Home = ({ userObj }) => {
           />
         ))}
       </div>
-    </div>
+    </HomeContainer>
   );
 };
 

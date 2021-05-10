@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
-import AppRouter from "components/Router";
-import { authService } from "fBase";
+import React, { useState, useEffect } from 'react';
+import AppRouter from 'components/Router';
+import { authService } from 'fBase';
 
 function App() {
   const [init, setInit] = useState(false);
@@ -36,10 +36,8 @@ function App() {
           userObj={userObj}
         />
       ) : (
-        "Loading..."
+        'Loading...'
       )}
-
-      <footer>&copy;{new Date().getFullYear()}Nwitter</footer>
     </>
   );
 }

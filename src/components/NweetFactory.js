@@ -1,19 +1,22 @@
-import React, { useState } from "react";
-import { storageService, dbService } from "fBase";
-import { v4 as uuidv4 } from "uuid";
+import React, { useState } from 'react';
+import { storageService, dbService } from 'fBase';
+import { v4 as uuidv4 } from 'uuid';
 
 const NweetFactory = ({ userObj }) => {
-  const [nweet, setNweet] = useState("");
-  const [attachment, setAttachment] = useState("");
+  const [nweet, setNweet] = useState('');
+  const [attachment, setAttachment] = useState('');
   const createNweet = async (e) => {
+    if (nweet === '') {
+      return;
+    }
     e.preventDefault();
-    let attachmentUrl = "";
+    let attachmentUrl = '';
     // 이미지와 함께 트윗을 할 경우, 이미지 url를 받아서 트윗작성 후 함께 저장
-    if (attachment !== "") {
+    if (attachment !== '') {
       const attachmentRef = storageService
         .ref()
         .child(`${userObj.uid}/${uuidv4()}`);
-      const response = await attachmentRef.putString(attachment, "data_url");
+      const response = await attachmentRef.putString(attachment, 'data_url');
       attachmentUrl = await response.ref.getDownloadURL();
     }
     const nweetObj = {
@@ -22,9 +25,9 @@ const NweetFactory = ({ userObj }) => {
       creatorId: userObj.uid,
       attachmentUrl,
     };
-    await dbService.collection("nweets").add(nweetObj);
-    setNweet("");
-    setAttachment("");
+    await dbService.collection('nweets').add(nweetObj);
+    setNweet('');
+    setAttachment('');
   };
 
   const onInputChange = (e) => {
